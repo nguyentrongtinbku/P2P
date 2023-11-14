@@ -18,9 +18,13 @@ const Login = () => {
     };
     try {
       const user = await axios.post("http://localhost:8080/login", data);
+        console.log(user.data.isAdmin)
         const jsonString = JSON.stringify(user);
         localStorage.setItem("userData", jsonString);
-        navigate("/");
+        if(user.data.isAdmin == true)
+        {
+          navigate("/admin")
+        }else navigate("/")
     } catch (err) {
       alert("Sai thông tin!");
     }

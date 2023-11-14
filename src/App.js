@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Login from "./component/auth/login";
 import Register from "./component/auth/register";
-import HomePage from "./component/auth/HomePage";
+import HomePage from "./component/HomePage";
+import Admin from "./component/AdminPage";
 
 async function publish(path, name) {
   const data = {
@@ -73,6 +74,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/admin" element={<Admin />} />
+
         </Routes>
       </div>
     </Router>
