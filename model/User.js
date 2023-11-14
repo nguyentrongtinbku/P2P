@@ -17,7 +17,6 @@ const userSchema = new mongoose.Schema(
     },
     file: [
       {
-        file_id: { type: String },
         path: { type: String },
         name_file: { type: String },
       },
