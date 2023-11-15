@@ -6,44 +6,6 @@ import Register from "./component/auth/register";
 import HomePage from "./component/HomePage";
 import Admin from "./component/AdminPage";
 
-async function publish(path, name) {
-  const data = {
-    localFilePath: path,
-    serverFileName: name,
-  };
-  console.log(data);
-  try {
-    const response = await fetch("http://localhost:8080/publish", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-      credentials: "include",
-    });
-  } catch (error) {
-    console.log("An error occurred:" + error);
-  }
-}
-async function fet(serverFileName) {
-  try {
-    const response = await fetch("http://localhost:8080/fet", {
-      method: "POST",
-      headers: {
-        "Content-Type": "text/plain",
-      },
-      body: serverFileName,
-    });
-    if (response.ok) {
-      const fileInfo = await response.json();
-    } else {
-      console.log("File not found");
-    }
-  } catch (error) {
-    console.log("Error");
-  }
-}
-
 function App() {
   const [input1, setstate1] = useState("");
   const [input2, setstate2] = useState("");
