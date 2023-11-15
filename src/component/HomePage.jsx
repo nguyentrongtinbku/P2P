@@ -14,7 +14,7 @@ const HomePage = () => {
     setstate2(e.target.value);
   };
   const handleInputChange3 = (e) => {
-    setstate2(e.target.value);
+    setstate3(e.target.value);
   };
   const handleClick = async () => {
     publish(input1, input2);
@@ -44,7 +44,7 @@ const HomePage = () => {
         <input
           type="text"
           placeholder="Tên"
-          onChange={(e) => handleInputChange1(e)}
+          onChange={(e) => handleInputChange2(e)}
         />
         <button onClick={handleClick}>Tải lên</button>
       </div>
@@ -54,10 +54,9 @@ const HomePage = () => {
         <input
           type="text"
           placeholder="Tên"
-          onChange={(e) => handleInputChange2(e)}
+          onChange={(e) => handleInputChange3(e)}
         />
         <button onClick={handleClick2}>Tải xuống</button>
-        <div>{ping}</div>
       </div>
       <div className="user_page3">
         <h2>Tệp đã chia sẻ</h2>
@@ -75,6 +74,7 @@ const HomePage = () => {
   );
 };
 async function publish(path, name) {
+  console.log('publish');
   const data = {
     localFilePath: path,
     serverFileName: name,
@@ -111,4 +111,4 @@ async function fet(serverFileName) {
     console.log("Error");
   }
 }
-export default Admin;
+export default HomePage;

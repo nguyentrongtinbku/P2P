@@ -7,28 +7,6 @@ import HomePage from "./component/HomePage";
 import Admin from "./component/AdminPage";
 
 function App() {
-  const [input1, setstate1] = useState("");
-  const [input2, setstate2] = useState("");
-  const [input3, setstate3] = useState("");
-
-  const handleInputChange = (e) => {
-    setstate1(e.target.value);
-  };
-  const handleInputChange2 = (e) => {
-    setstate2(e.target.value);
-  };
-  const handleInputChange3 = (e) => {
-    setstate3(e.target.value);
-  };
-
-  const handleClick = () => {
-    console.log(input1, input2);
-    publish(input1, input2);
-  };
-  const handleClickfetch = () => {
-    console.log(input3);
-    fet(input3);
-  };
   return (
     <Router>
       <div className="App">
