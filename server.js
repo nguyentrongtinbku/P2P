@@ -62,43 +62,43 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// app.post("/publish", async (req, res) => {
-//   const { localFilePath, serverFileName } = req.body;
-//   const networkInterfaces = os.networkInterfaces();
-//   const clientIp = networkInterfaces["Wi-Fi"][1].address;
-//   try {
-//     const file = new File({ clientIp, localFilePath, serverFileName });
-//     await file.save();
-//   } catch (err) {
-//     res
-//       .status(500)
-//       .json({ error: "An error occurred while saving the file information." });
-//   }
-// });
+app.post("/publish", async (req, res) => {
+  const { localFilePath, serverFileName } = req.body;
+  const networkInterfaces = os.networkInterfaces();
+  const clientIp = networkInterfaces["Wi-Fi"][1].address;
+  try {
+    const file = new File({ clientIp, localFilePath, serverFileName });
+    await file.save();
+  } catch (err) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while saving the file information." });
+  }
+});
 
-// app.post("/fet", async (req, res) => {
-//   try {
-//     const serverFileName = req.body;
-//     const fileInfo = await File.findOne({ serverFileName });
-//     if (!fileInfo) {
-//       res.status(404).json({ error: "File not found" });
-//     } else {
-//       console.log(fileInfo.clientIp);
-//       downloadFileFromIP(
-//         fileInfo.clientIp,
-//         3000,
-//         fileInfo.localFilePath,
-//         "C:\\test_btl\\download\\" + getLastNameFromPath(fileInfo.localFilePath)
-//       );
-//       res.json(fileInfo);
-//     }
-//   } catch (err) {
-//     console.error(err);
-//     res
-//       .status(500)
-//       .json({ error: "An error occurred while fetching file information." });
-//   }
-// });
+app.post("/fet", async (req, res) => {
+  try {
+    const serverFileName = req.body;
+    const fileInfo = await File.findOne({ serverFileName });
+    if (!fileInfo) {
+      res.status(404).json({ error: "File not found" });
+    } else {
+      console.log(fileInfo.clientIp);
+      downloadFileFromIP(
+        fileInfo.clientIp,
+        3000,
+        fileInfo.localFilePath,
+        "C:\\test_btl\\download\\" + getLastNameFromPath(fileInfo.localFilePath)
+      );
+      res.json(fileInfo);
+    }
+  } catch (err) {
+    console.error(err);
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching file information." });
+  }
+});
 
 // fake data
 // var newfile = {
@@ -127,7 +127,12 @@ app.post("/ping", async (req, res) => {
 app.post("/discover", async (req, res) => {
   try {
     try {
-      const user = await User.find({ ipv4: req.body.ipv4 });
+      const clientIp = req.body.ipv4;
+      if(clientIp === -1){
+        const networkInterfaces = os.networkInterfaces();
+        clientIp = networkInterfaces["Wi-Fi"][1].address;
+      }
+      const user = await User.find({ ipv4: clientIp });
       res.json(user[0].file);
     } catch (error) {
       console.error("Error:", error);
@@ -142,13 +147,14 @@ app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
-async function discover(clientIp) {
+/*async function discover(clientIp) {
   try {
     await mongoose.connect("mongodb://localhost/MMT", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
     const files = await File.find({ clientIp: clientIp });
+
     const serverFileNames = files.map((file) => file.serverFileName);
     console.log("List of local files:", serverFileNames);
   } catch (error) {
@@ -169,7 +175,7 @@ function pingClient(clientIp) {
       }
     });
   });
-}
+}*/
 
 function downloadFileFromIP(ipAddress, port, filePath, localFilePath) {
   const net = require("net");
