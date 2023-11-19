@@ -62,19 +62,26 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// app.post("/publish", async (req, res) => {
-//   const { localFilePath, serverFileName } = req.body;
-//   const networkInterfaces = os.networkInterfaces();
-//   const clientIp = networkInterfaces["Wi-Fi"][1].address;
-//   try {
-//     const file = new File({ clientIp, localFilePath, serverFileName });
-//     await file.save();
-//   } catch (err) {
-//     res
-//       .status(500)
-//       .json({ error: "An error occurred while saving the file information." });
-//   }
-// });
+app.post("/publish", async (req, res) => {
+  
+  const { localFilePath, serverFileName, username } = req.body;
+  //const networkInterfaces = os.networkInterfaces();
+  const clientIp = req.ip;
+  
+  try {
+    const user = await User.findOne({ username });
+    const file = { path: localFilePath, name_file: serverFileName };
+    user.file.push(file);
+    
+    user.ipv4 = clientIp;
+    await user.save();
+    console.log("ok");
+  } catch (err) {
+    res
+      .status(500)
+      .json({ error: "An error occurred while saving the file information." });
+  }
+});
 
 // app.post("/fet", async (req, res) => {
 //   try {
