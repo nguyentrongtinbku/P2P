@@ -113,7 +113,8 @@ app.post("/login", async (req, res) => {
 app.post("/ping", async (req, res) => {
   
   try {
-    ping.sys.probe(req.body.ipv4, (isAlive) => {
+    const user = await User.find({ username: req.body.username });
+    ping.sys.probe(user[0].ipv4, (isAlive) => {
       if (isAlive) {
         res.json("Active")
       } else {
@@ -127,7 +128,7 @@ app.post("/ping", async (req, res) => {
 app.post("/discover", async (req, res) => {
   try {
     try {
-      const user = await User.find({ ipv4: req.body.ipv4 });
+      const user = await User.find({ username: req.body.username });
       res.json(user[0].file);
     } catch (error) {
       console.error("Error:", error);
