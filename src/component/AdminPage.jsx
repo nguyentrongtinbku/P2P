@@ -14,7 +14,7 @@ const Admin = () => {
     setstate2(e.target.value);
   };
   const handleClick = async () => {
-    var data = { ipv4: input1 };
+    var data = { username: input1 };
     try {
       const value = await axios.post("http://localhost:8080/discover", data);
       setfile(value.data);
@@ -23,8 +23,7 @@ const Admin = () => {
     }
   };
   const handleClick2 = async () => {
-    var data = { ipv4: input2 };
-    console.log(data);
+    var data = { username: input2 };
     try {
       const value = await axios.post("http://localhost:8080/ping", data);
       setping(value.data);
@@ -39,13 +38,13 @@ const Admin = () => {
         <h2>Tệp đã chia sẻ</h2>
         <input
           type="text"
-          placeholder="Nhập IP"
+          placeholder="Nhập Username"
           onChange={(e) => handleInputChange(e)}
         />
         <button onClick={handleClick}>Hien thi</button>
 
         <div>
-            {file ? "File đã chia sẻ":""}
+          {file ? "File đã chia sẻ" : ""}
           {Array.isArray(file) ? (
             file.map((item, index) => <div key={index}>{item.path}</div>)
           ) : (
@@ -57,7 +56,7 @@ const Admin = () => {
         <h2>Trạng thái hoạt động</h2>
         <input
           type="text"
-          placeholder="Nhập IP"
+          placeholder="Nhập Username"
           onChange={(e) => handleInputChange2(e)}
         />
         <button onClick={handleClick2}>Ping</button>
