@@ -3,7 +3,7 @@ import { useState } from "react";
 
 const jsonString = localStorage.getItem("userData");
 const userData = JSON.parse(jsonString);
-console.log(userData.data.username);
+
 
 const HomePage = () => {
   const [input1, setstate1] = useState("");
