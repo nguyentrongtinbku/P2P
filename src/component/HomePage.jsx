@@ -1,6 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
 
+const jsonString = localStorage.getItem("userData");
+const userData = JSON.parse(jsonString);
+console.log(userData.data.username);
+
 const HomePage = () => {
   const [input1, setstate1] = useState("");
   const [input2, setstate2] = useState("");
@@ -17,7 +21,7 @@ const HomePage = () => {
     setstate3(e.target.value);
   };
   const handleClick = async () => {
-    publish(input1, input2);
+    publish(input1, input2, userData.data.username);
   };
   const handleClick2 = async () => {
     fet(input3);
@@ -73,11 +77,11 @@ const HomePage = () => {
     </div>
   );
 };
-async function publish(path, name) {
-  console.log('publish');
+async function publish(path, name, username) {
   const data = {
     localFilePath: path,
     serverFileName: name,
+    username: username,
   };
   console.log(data);
   try {
