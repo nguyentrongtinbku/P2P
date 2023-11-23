@@ -66,16 +66,15 @@ app.post("/publish", async (req, res) => {
   
   const { localFilePath, serverFileName, username } = req.body;
   //const networkInterfaces = os.networkInterfaces();
+  //const clientIp = networkInterfaces["Wi-Fi"][1].address;
   const clientIp = req.ip;
   
   try {
     const user = await User.findOne({ username });
     const file = { path: localFilePath, name_file: serverFileName };
     user.file.push(file);
-    
     user.ipv4 = clientIp;
     await user.save();
-    console.log("ok");
   } catch (err) {
     res
       .status(500)
@@ -83,42 +82,31 @@ app.post("/publish", async (req, res) => {
   }
 });
 
-// app.post("/fet", async (req, res) => {
-//   try {
-//     const serverFileName = req.body;
-//     const fileInfo = await File.findOne({ serverFileName });
-//     if (!fileInfo) {
-//       res.status(404).json({ error: "File not found" });
-//     } else {
-//       console.log(fileInfo.clientIp);
-//       downloadFileFromIP(
-//         fileInfo.clientIp,
-//         3000,
-//         fileInfo.localFilePath,
-//         "C:\\test_btl\\download\\" + getLastNameFromPath(fileInfo.localFilePath)
-//       );
-//       res.json(fileInfo);
-//     }
-//   } catch (err) {
-//     console.error(err);
-//     res
-//       .status(500)
-//       .json({ error: "An error occurred while fetching file information." });
-//   }
-// });
-
-// fake data
-// var newfile = {
-//   path: "acascacac",
-//   name_file: "bai5.pdf",
-// };
-// const user = await User.findOne({ username: "thientran" });
-// user.file.push(newfile);
-// await user.save();
-// res.json(user);
+ app.post("/fet", async (req, res) => {
+   try {
+     const serverFileName = req.body;
+     const user = await User.findOne({ 'file.name_file':serverFileName });
+     if (!user) {
+       res.status(404).json({ error: "File not found" });
+     } else {
+      const file = user.file.find((f) => f.name_file === serverFileName);
+       downloadFileFromIP(
+         file.clientIp,
+         3000,
+         file.path,
+         "C:\\test_btl\\download\\" + getLastNameFromPath(file.path)
+       );
+       res.json(file);
+     }
+   } catch (err) {
+     console.error(err);
+     res
+       .status(500)
+       .json({ error: "An error occurred while fetching file information." });
+   }
+ });
 
 app.post("/ping", async (req, res) => {
-  
   try {
     const user = await User.find({ username: req.body.username });
     ping.sys.probe(user[0].ipv4, (isAlive) => {
@@ -199,47 +187,3 @@ function getLastNameFromPath(path) {
     return null;
   }
 }
-
-// Command shell
-// const readline = require("readline");
-// const rl = readline.createInterface({
-//   input: process.stdin,
-//   output: process.stdout,
-//   prompt: "Command> ",
-// });
-// rl.prompt();
-// rl.on("line", (line) => {
-//   const input = line.trim();
-//   const args = input.split(" ");
-
-//   if (args.length >= 1) {
-//     const command = args[0];
-//     if (command === "exit") {
-//       rl.close();
-//       return;
-//     }
-//     if (command === "discover") {
-//       if (args.length === 2) {
-//         const arg = args[1];
-//         discover(arg);
-//       } else {
-//         console.log("Invalid command. Usage: discover arg");
-//       }
-//     } else if (command === "ping") {
-//       if (args.length === 2) {
-//         const arg = args[1];
-//         pingClient(arg);
-//       } else {
-//         console.log("Invalid command. Usage: ping arg");
-//       }
-//     } else {
-//       console.log(`Command not recognized: ${command}`);
-//     }
-//   } else {
-//     console.log("Invalid command.");
-//   }
-//   rl.prompt();
-// }).on("close", () => {
-//   console.log("Command shell đã đóng");
-//   process.exit(0);
-// });
