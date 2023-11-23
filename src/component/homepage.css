@@ -1,0 +1,55 @@
+.User_container {
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+  margin: 20px auto; /* Increased margin for better spacing */
+  padding: 20px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 8px; /* Slightly increased border radius for softer edges */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Added a subtle box shadow */
+}
+
+h2 {
+  color: #333;
+  margin-bottom: 15px; /* Increased margin for better separation */
+  font-size: 24px; /* Increased font size for heading */
+}
+
+.user_section {
+  margin-bottom: 30px; /* Increased margin between sections */
+}
+
+.input_field {
+  width: calc(100% - 16px); /* Adjusted width to consider padding */
+  padding: 10px; /* Increased padding for better input field appearance */
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px; /* Slightly increased border radius */
+  outline: none; /* Removed default input focus outline */
+}
+
+.action_button,
+.reload_button {
+  padding: 10px 20px; /* Increased padding for buttons */
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease; /* Smooth transition on hover */
+}
+
+.action_button:hover,
+.reload_button:hover {
+  background-color: #0056b3;
+}
+
+.shared_files {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 6px;
+}
+
+.file_item {
+  padding: 8px 0; /* Adjusted padding for file items */
+}

@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useState } from "react";
+import './homepage.css';
 
 const jsonString = localStorage.getItem("userData");
 const userData = JSON.parse(jsonString);
-
 
 const HomePage = () => {
   const [input1, setstate1] = useState("");
@@ -27,7 +27,7 @@ const HomePage = () => {
     fet(input3);
   };
   const handleClick3 = async () => {
-    var data = { ipv4: -1 };
+    var data = { username: userData.data.username };
     try {
       const value = await axios.post("http://localhost:8080/discover", data);
       setfile(value.data);
@@ -37,36 +37,36 @@ const HomePage = () => {
   };
   return (
     <div className="User_container">
-      <h2>Xinchao: user</h2>
+      <h2>Xinchao:{userData.data.username} </h2>
       <div className="user_page1">
-        <h2>Tải lên</h2>
+        <h2>PUBLISH</h2>
         <input
           type="text"
-          placeholder="Đường dẫn"
+          placeholder="Path"
           onChange={(e) => handleInputChange(e)}
         />
         <input
           type="text"
-          placeholder="Tên"
+          placeholder="File name"
           onChange={(e) => handleInputChange2(e)}
         />
-        <button onClick={handleClick}>Tải lên</button>
+        <button onClick={handleClick}>Publish</button>
       </div>
 
       <div className="user_page2">
-        <h2>Tải xuống</h2>
+        <h2>FETCH</h2>
         <input
           type="text"
-          placeholder="Tên"
+          placeholder="File name"
           onChange={(e) => handleInputChange3(e)}
         />
-        <button onClick={handleClick2}>Tải xuống</button>
+        <button onClick={handleClick2}>Fetch</button>
       </div>
       <div className="user_page3">
-        <h2>Tệp đã chia sẻ</h2>
-        <button onClick={handleClick3}>Hiển thị</button>
+        <h2>SHARED FILES</h2>
+        <button onClick={handleClick3}>Reload</button>
         <div>
-            {file ? "File đã chia sẻ":""}
+            {file ? "Shared files":""}
           {Array.isArray(file) ? (
             file.map((item, index) => <div key={index}>{item.path}</div>)
           ) : (
@@ -93,6 +93,7 @@ async function publish(path, name, username) {
       body: JSON.stringify(data),
       credentials: "include",
     });
+    console.log(data)
   } catch (error) {
     console.log("An error occurred:" + error);
   }
@@ -107,7 +108,7 @@ async function fet(serverFileName) {
       body: serverFileName,
     });
     if (response.ok) {
-      const fileInfo = await response.json();
+      console.log("Sucess")
     } else {
       console.log("File not found");
     }
