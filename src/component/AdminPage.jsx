@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
+import './adminpage.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Admin = () => {
   const [input1, setstate1] = useState("");
@@ -33,15 +35,15 @@ const Admin = () => {
   };
   return (
     <div className="Admin_container">
-      <h2>Xinchao: Admin</h2>
+      <h2>Hello: Admin</h2>
       <div className="admin_page1">
         <h2>Tệp đã chia sẻ</h2>
         <input
-          type="text"
+          type="text" class="form-control"
           placeholder="Nhập Username"
           onChange={(e) => handleInputChange(e)}
         />
-        <button onClick={handleClick}>Hien thi</button>
+        <button type="button" class="btn btn-primary" onClick={handleClick}>Discover</button>
 
         <div>
           {file ? "File đã chia sẻ" : ""}
@@ -55,11 +57,11 @@ const Admin = () => {
       <div className="admin_page2">
         <h2>Trạng thái hoạt động</h2>
         <input
-          type="text"
+          type="text" class="form-control"
           placeholder="Nhập Username"
           onChange={(e) => handleInputChange2(e)}
         />
-        <button onClick={handleClick2}>Ping</button>
+        <button type="button" class="btn btn-primary" onClick={handleClick2}>Ping</button>
         <div>{ping}</div>
       </div>
     </div>

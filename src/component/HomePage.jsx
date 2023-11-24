@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import './homepage.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const jsonString = localStorage.getItem("userData");
 const userData = JSON.parse(jsonString);
@@ -37,34 +38,36 @@ const HomePage = () => {
   };
   return (
     <div className="User_container">
-      <h2>Xinchao:{userData.data.username} </h2>
+      <h2>Hello:{userData.data.username} </h2>
       <div className="user_page1">
         <h2>PUBLISH</h2>
         <input
-          type="text"
+          type="text" class="form-control"
           placeholder="Path"
           onChange={(e) => handleInputChange(e)}
         />
         <input
-          type="text"
+          type="text" class="form-control" 
           placeholder="File name"
           onChange={(e) => handleInputChange2(e)}
         />
-        <button onClick={handleClick}>Publish</button>
+        <div>
+        <button type="button" class="btn btn-primary" onClick={handleClick}>Publish</button>
+        </div>  
       </div>
 
       <div className="user_page2">
         <h2>FETCH</h2>
         <input
-          type="text"
+          type="text" class="form-control"  
           placeholder="File name"
           onChange={(e) => handleInputChange3(e)}
         />
-        <button onClick={handleClick2}>Fetch</button>
+        <button type="button" class="btn btn-primary" onClick={handleClick2}>Fetch</button>
       </div>
       <div className="user_page3">
         <h2>SHARED FILES</h2>
-        <button onClick={handleClick3}>Reload</button>
+        <button type="button" class="btn btn-primary" onClick={handleClick3}>Reload</button>
         <div>
             {file ? "Shared files":""}
           {Array.isArray(file) ? (

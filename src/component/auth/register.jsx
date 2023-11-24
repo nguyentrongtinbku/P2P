@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from 'axios';
 import {  useNavigate } from "react-router-dom";
+import './total.css';
 
 const Register = () => {
     const navigate = useNavigate();
@@ -25,10 +26,11 @@ const Register = () => {
     }
   };
   return (
-    <div>
-      <input type="text" onChange={(e) => handleInputChange(e)} />
-      <input type="text" onChange={(e) => handleInputChange2(e)} />
-      <button onClick={handleClick}>Submit</button>
+    <div className="login">
+      <h2>Register</h2>
+      <input type="text" class="form-control" placeholder="Username" onChange={(e) => handleInputChange(e)} />
+      <input type="text" class="form-control" placeholder="Password" onChange={(e) => handleInputChange2(e)} />
+      <button type="button" class="btn btn-primary" onClick={handleClick}>Next</button>
     </div>
   );
 };
