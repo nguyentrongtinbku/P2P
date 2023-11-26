@@ -1,6 +1,6 @@
 .User_container {
   font-family: Arial, sans-serif;
-  max-width: 600px;
+  max-width: 800px;
   margin: 50px auto;
   padding: 40px;
   background-color: #f9f9f9;
@@ -20,11 +20,36 @@ h2 {
 }
 .user_page2 {
   margin-bottom: 30px; /* Increased margin between sections */
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .user_page1 input {
   margin-bottom: 10px; /* Hoặc sử dụng padding: 10px; nếu bạn muốn áp dụng khoảng cách bên trong input */
 }
-.user_page2 input {
-  margin-bottom: 10px; /* Hoặc sử dụng padding: 10px; nếu bạn muốn áp dụng khoảng cách bên trong input */
+.buttion_logout
+{
+  margin-top: 100px;
+}
+.file_detail
+{
+  padding: 20px 12px;
+}
+.file_detail:hover {
+  cursor: pointer;
+}
+.file_container{  
+  height: 200px;
+  width: 200px;
+  border: 2px solid rgb(0, 0, 0);
+
+}
+.file_img{
+  width: 100%;
+  height: auto;
+}
+.file_name{
+  margin-top: 4px;
 }

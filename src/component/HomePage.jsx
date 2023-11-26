@@ -1,16 +1,33 @@
 import axios from "axios";
-import { useState } from "react";
-import './homepage.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-const jsonString = localStorage.getItem("userData");
-const userData = JSON.parse(jsonString);
+import { useEffect, useState } from "react";
+import "./homepage.css";
+import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import File from "./file";
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const [input1, setstate1] = useState("");
   const [input2, setstate2] = useState("");
   const [input3, setstate3] = useState("");
-  const [file, setfile] = useState("");
+  const [file, setfile] = useState([]);
+  const [userData, setuserData] = useState(
+    JSON.parse(localStorage.getItem("userData"))
+  );
+  useEffect(() => {
+    const getdata = async () => {
+      try {
+        const value = await axios.get("http://localhost:8080/allfile");
+        console.log(value.data);
+        setfile(value.data);
+      } catch (err) {
+        alert(err);
+      }
+    };
+    getdata();
+  }, []);
 
   const handleInputChange = (e) => {
     setstate1(e.target.value);
@@ -22,64 +39,82 @@ const HomePage = () => {
     setstate3(e.target.value);
   };
   const handleClick = async () => {
+    notify();
     publish(input1, input2, userData.data.username);
   };
-  const handleClick2 = async () => {
-    fet(input3);
+  const handleClick2 = async (name_file) => {
+    notifyfetch()
+    fet(name_file);
   };
-  const handleClick3 = async () => {
-    var data = { username: userData.data.username };
-    try {
-      const value = await axios.post("http://localhost:8080/discover", data);
-      setfile(value.data);
-    } catch (err) {
-      alert(err);
-    }
+
+  const logout = async () => {
+    localStorage.removeItem("userData");
+    navigate("/login");
   };
+  const notify = () => toast.info("Add files successfully!");
+  const notifyfetch = () => toast.info("Download file successfully!");
+
+
   return (
     <div className="User_container">
       <h2>Hello:{userData.data.username} </h2>
       <div className="user_page1">
         <h2>PUBLISH</h2>
         <input
-          type="text" class="form-control"
+          type="text"
+          class="form-control"
           placeholder="Path"
           onChange={(e) => handleInputChange(e)}
         />
         <input
-          type="text" class="form-control" 
+          type="text"
+          class="form-control"
           placeholder="File name"
           onChange={(e) => handleInputChange2(e)}
         />
         <div>
-        <button type="button" class="btn btn-primary" onClick={handleClick}>Publish</button>
-        </div>  
+          <button type="button" class="btn btn-primary" onClick={handleClick}>
+            Publish
+          </button>
+          
+        </div>
+      </div>
+
+      <div>
+        <h2>FILE SHARE</h2>
       </div>
 
       <div className="user_page2">
-        <h2>FETCH</h2>
-        <input
-          type="text" class="form-control"  
-          placeholder="File name"
-          onChange={(e) => handleInputChange3(e)}
-        />
-        <button type="button" class="btn btn-primary" onClick={handleClick2}>Fetch</button>
+        {Array.isArray(file) ? (
+          file.map((item, index) => (
+            <div
+              className="file_detail"
+              key={index}
+              onClick={() => handleClick2(item.name_file)}
+            >
+              <File file_name={item.name_file} />
+            </div>
+          ))
+        ) : (
+          <div></div>
+        )}
       </div>
       <div className="user_page3">
-        <h2>SHARED FILES</h2>
-        <button type="button" class="btn btn-primary" onClick={handleClick3}>Reload</button>
-        <div>
-            {file ? "Shared files":""}
-          {Array.isArray(file) ? (
-            file.map((item, index) => <div key={index}>{item.path}</div>)
-          ) : (
-            <div></div>
-          )}
-        </div>
+        <div></div>
       </div>
+      <button
+        className="buttion_logout"
+        type="button"
+        class="btn btn-primary"
+        onClick={logout}
+      >
+        Logout
+      </button>
+      <ToastContainer />
     </div>
   );
 };
+
 async function publish(path, name, username) {
   const data = {
     localFilePath: path,
@@ -96,7 +131,7 @@ async function publish(path, name, username) {
       body: JSON.stringify(data),
       credentials: "include",
     });
-    console.log(data)
+    console.log(data);
   } catch (error) {
     console.log("An error occurred:" + error);
   }
@@ -111,7 +146,7 @@ async function fet(serverFileName) {
       body: serverFileName,
     });
     if (response.ok) {
-      console.log("Sucess")
+      console.log("Sucess");
     } else {
       console.log("File not found");
     }
@@ -120,3 +155,14 @@ async function fet(serverFileName) {
   }
 }
 export default HomePage;
+{
+  /* <input
+          type="text"
+          class="form-control"
+          placeholder="File name"
+          onChange={(e) => handleInputChange3(e)}
+        />
+         <button type="button" class="btn btn-primary" onClick={handleClick2}>
+          Fetch
+        </button> */
+}

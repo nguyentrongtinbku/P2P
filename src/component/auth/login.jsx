@@ -35,8 +35,8 @@ const Login = () => {
     <div className="login">
       <h2>Login</h2>
       <input type="text" class="form-control" placeholder="Username" onChange={(e) => handleInputChange(e)} />
-      <input type="text" class="form-control" placeholder="Password" onChange={(e) => handleInputChange2(e)} />
-      <button type="button" class="btn btn-primary" onClick={handleClick}>Next</button>
+      <input type="password" class="form-control" placeholder="Password" onChange={(e) => handleInputChange2(e)} />
+      <button type="button" class="btn btn-primary" onClick={handleClick}> Login </button>
     </div>
   );
 };

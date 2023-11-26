@@ -19,6 +19,7 @@ const Admin = () => {
     var data = { username: input1 };
     try {
       const value = await axios.post("http://localhost:8080/discover", data);
+      console.log(value.data)
       setfile(value.data);
     } catch (err) {
       alert(err);
@@ -48,7 +49,7 @@ const Admin = () => {
         <div>
           {file ? "File đã chia sẻ" : ""}
           {Array.isArray(file) ? (
-            file.map((item, index) => <div key={index}>{item.path}</div>)
+            file.map((item, index) => <div key={index}>{item.name_file}</div>)
           ) : (
             <div></div>
           )}
