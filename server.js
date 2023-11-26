@@ -68,7 +68,6 @@ app.post("/publish", async (req, res) => {
   //const networkInterfaces = os.networkInterfaces();
   //const clientIp = networkInterfaces["Wi-Fi"][1].address;
   const clientIp = req.ip;
-  
   try {
     const user = await User.findOne({ username });
     const file = { path: localFilePath, name_file: serverFileName };
@@ -133,6 +132,19 @@ app.post("/discover", async (req, res) => {
     res.json("dang nhap fail");
   }
 });
+
+app.get("/allfile", async (req, res) => {
+  try {
+    // Sử dụng phương thức find để lấy tất cả các documents từ collection 'users'
+    const users = await User.find({}, 'file');
+    // Trả về mảng các username
+    res.json(users.map(user => user.file).filter(subArray => subArray.length > 0).flat())
+  } catch (error) {
+    console.error('Error retrieving usernames:', error.message);
+    throw error;
+  }
+});
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
