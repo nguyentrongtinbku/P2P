@@ -1,13 +1,24 @@
 import axios from "axios";
-import { useState } from "react";
-import './adminpage.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { useEffect, useState } from "react";
+import "./adminpage.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom";
 
 const Admin = () => {
+  const navigate = useNavigate();
+
   const [input1, setstate1] = useState("");
   const [input2, setstate2] = useState("");
   const [file, setfile] = useState("");
   const [ping, setping] = useState("");
+
+  useEffect(() => {
+    const admin = JSON.parse(localStorage.getItem("userData"));
+    console.log(admin.data.isAdmin !== true);
+    {
+      navigate("/home");
+    }
+  }, []);
 
   const handleInputChange = (e) => {
     setstate1(e.target.value);
@@ -19,7 +30,7 @@ const Admin = () => {
     var data = { username: input1 };
     try {
       const value = await axios.post("http://localhost:8080/discover", data);
-      console.log(value.data)
+      console.log(value.data);
       setfile(value.data);
     } catch (err) {
       alert(err);
@@ -40,11 +51,14 @@ const Admin = () => {
       <div className="admin_page1">
         <h2>Tệp đã chia sẻ</h2>
         <input
-          type="text" class="form-control"
+          type="text"
+          class="form-control"
           placeholder="Nhập Username"
           onChange={(e) => handleInputChange(e)}
         />
-        <button type="button" class="btn btn-primary" onClick={handleClick}>Discover</button>
+        <button type="button" class="btn btn-primary" onClick={handleClick}>
+          Discover
+        </button>
 
         <div>
           {file ? "File đã chia sẻ" : ""}
@@ -58,11 +72,14 @@ const Admin = () => {
       <div className="admin_page2">
         <h2>Trạng thái hoạt động</h2>
         <input
-          type="text" class="form-control"
+          type="text"
+          class="form-control"
           placeholder="Nhập Username"
           onChange={(e) => handleInputChange2(e)}
         />
-        <button type="button" class="btn btn-primary" onClick={handleClick2}>Ping</button>
+        <button type="button" class="btn btn-primary" onClick={handleClick2}>
+          Ping
+        </button>
         <div>{ping}</div>
       </div>
     </div>

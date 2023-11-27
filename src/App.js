@@ -30,7 +30,6 @@ function App() {
           <Route path="/" element={userData ? <HomePage /> : <Navigate to="/login" />} />
           <Route path="/login" element={<Login />} />
           <Route path="/home" element={<HomePage />} />
-
           <Route path="/register" element={<Register />} />
           <Route path="/admin" element={<Admin />} />
         </Routes>
