@@ -6,6 +6,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import File from "./file";
+import Login from "./auth/login";
 
 const HomePage = () => {
   const navigate = useNavigate();
@@ -43,17 +44,24 @@ const HomePage = () => {
     publish(input1, input2, userData.data.username);
   };
   const handleClick2 = async (name_file) => {
-    notifyfetch()
+    notifyfetch();
     fet(name_file);
   };
 
   const logout = async () => {
-    localStorage.removeItem("userData");
+    const trylogout = async () => {
+      try {
+        await localStorage.removeItem("userData");
+      } catch (err) {
+        alert(err);
+      }
+    };
+    trylogout();
     navigate("/login");
   };
+
   const notify = () => toast.info("Add files successfully!");
   const notifyfetch = () => toast.info("Download file successfully!");
-
 
   return (
     <div className="User_container">
@@ -76,7 +84,6 @@ const HomePage = () => {
           <button type="button" class="btn btn-primary" onClick={handleClick}>
             Publish
           </button>
-          
         </div>
       </div>
 
