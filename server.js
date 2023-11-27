@@ -38,14 +38,20 @@ app.use(bodyParser.text());
 app.post("/register", async (req, res) => {
   const networkInterfaces = os.networkInterfaces();
   const clientIp = networkInterfaces["Wi-Fi"][1].address;
-  const newData = new User({
-    username: req.body.username,
-    password: req.body.password,
-    ipv4: clientIp,
-    isAdmin: false,
-  });
-  newData.save();
-  res.json("oke");
+
+  try {
+    const newData = new User({
+      username: req.body.username,
+      password: req.body.password,
+      ipv4: clientIp,
+      isAdmin: false,
+    });
+
+    await newData.save();
+    res.json("Registration successful");
+  } catch (error) {
+    res.json(error);
+  }
 });
 app.post("/login", async (req, res) => {
   try {
@@ -56,6 +62,7 @@ app.post("/login", async (req, res) => {
     if (req.body.password != user.password) {
       return res.status(404).json("Wrong password!");
     }
+
     res.json(user);
   } catch (error) {
     res.json("dang nhap fail");
@@ -63,16 +70,15 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/publish", async (req, res) => {
-  
   const { localFilePath, serverFileName, username } = req.body;
   //const networkInterfaces = os.networkInterfaces();
   //const clientIp = networkInterfaces["Wi-Fi"][1].address;
-  const clientIp = req.ip;
+  // const clientIp = req.ip;
   try {
     const user = await User.findOne({ username });
     const file = { path: localFilePath, name_file: serverFileName };
     user.file.push(file);
-    user.ipv4 = clientIp;
+    // user.ipv4 = clientIp;
     await user.save();
   } catch (err) {
     res
@@ -81,38 +87,58 @@ app.post("/publish", async (req, res) => {
   }
 });
 
- app.post("/fet", async (req, res) => {
-   try {
-     const serverFileName = req.body;
-     const user = await User.findOne({ 'file.name_file':serverFileName });
-     if (!user) {
-       res.status(404).json({ error: "File not found" });
-     } else {
+function downloadFileFromIP(ipAddress, port, filePath, localFilePath) {
+  const net = require("net");
+  const fs = require("fs");
+  console.log(localFilePath)
+  const client = new net.Socket();
+  client.connect(port, ipAddress, () => {
+    client.write(`GET ${filePath}\r\n\r\n`);
+  });
+  client.on("data", (data) => {
+    if (data.length > 0) {
+      fs.appendFileSync(localFilePath, data);
+    }
+  },
+  client.on("error", (err) => {
+    console.error("Socket error:", err);
+    // In ra thông báo lỗi hoặc xử lý lỗi tùy thuộc vào yêu cầu của bạn
+  })
+  );
+}
+
+app.post("/fet", async (req, res) => {
+  try {
+    const serverFileName = req.body;
+    const user = await User.findOne({ "file.name_file": serverFileName });
+    if (!user) {
+      res.status(404).json({ error: "File not found" });
+    } else {
       const file = user.file.find((f) => f.name_file === serverFileName);
-       downloadFileFromIP(
-         file.clientIp,
-         3000,
-         file.path,
-         "C:\\test_btl\\download\\" + getLastNameFromPath(file.path)
-       );
-       res.json(file);
-     }
-   } catch (err) {
-     console.error(err);
-     res
-       .status(500)
-       .json({ error: "An error occurred while fetching file information." });
-   }
- });
+      downloadFileFromIP(
+        file.clientIp,
+        3000,
+        file.path,
+        "C:\\test_btl\\download\\" + getLastNameFromPath(file.path)
+      );
+      res.json(file);
+    }
+  } catch (err) {
+    console.error(err);
+    res
+      .status(500)
+      .json({ error: "An error occurred while fetching file information." });
+  }
+});
 
 app.post("/ping", async (req, res) => {
   try {
     const user = await User.find({ username: req.body.username });
     ping.sys.probe(user[0].ipv4, (isAlive) => {
       if (isAlive) {
-        res.json("Active")
+        res.json("Active");
       } else {
-        res.json("Inactive")
+        res.json("Inactive");
       }
     });
   } catch (error) {
@@ -136,15 +162,19 @@ app.post("/discover", async (req, res) => {
 app.get("/allfile", async (req, res) => {
   try {
     // Sử dụng phương thức find để lấy tất cả các documents từ collection 'users'
-    const users = await User.find({}, 'file');
+    const users = await User.find({}, "file");
     // Trả về mảng các username
-    res.json(users.map(user => user.file).filter(subArray => subArray.length > 0).flat())
+    res.json(
+      users
+        .map((user) => user.file)
+        .filter((subArray) => subArray.length > 0)
+        .flat()
+    );
   } catch (error) {
-    console.error('Error retrieving usernames:', error.message);
+    console.error("Error retrieving usernames:", error.message);
     throw error;
   }
 });
-
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
@@ -166,6 +196,7 @@ async function discover(clientIp) {
 }
 
 const { Console } = require("console");
+const { format } = require("path");
 
 function pingClient(clientIp) {
   return new Promise((resolve, reject) => {
@@ -179,17 +210,6 @@ function pingClient(clientIp) {
   });
 }
 
-function downloadFileFromIP(ipAddress, port, filePath, localFilePath) {
-  const net = require("net");
-  const fs = require("fs");
-  const client = new net.Socket();
-  client.connect(port, ipAddress, () => {
-    client.write(`GET ${filePath}\r\n\r\n`);
-  });
-  client.on("data", (data) => {
-    fs.appendFileSync(localFilePath, data);
-  });
-}
 
 function getLastNameFromPath(path) {
   const matches = path.match(/[^\\]+$/);
